@@ -2,16 +2,25 @@
   <section class="score">
     
   </section>
-  <section class="details">
-    <h2 v-html="this.question"></h2>
-    <input type="radio" name="options" value="true">
-    <label for="true">True</label>
-    
-    <input type="radio" name="options" value="false">
-    <label for="false">False</label>
+  <template v-if="this.question">
+    <section class="details">
+      <h2 v-html="this.question"></h2>
 
-    <button>Send</button>
-  </section>
+      <template v-for="answer in this.answers" :key="answer">
+        <section class="general-box">
+          <input 
+            type="radio" 
+            name="options" 
+            :value="answer"
+            v-model="chosenAnswer">
+          
+          <label class="item-answer" v-html="answer"></label>
+        </section>  
+      </template>
+
+      <button class="send" @click="this.submitAnswer">Send</button>
+    </section>
+  </template>
 </template>
 
 <script>
@@ -24,6 +33,7 @@ export default {
       question: undefined,
       incorrectAnswers: undefined,
       correctAnswers: undefined,
+      chosenAnswer: undefined,
     }
   },
 
@@ -34,6 +44,20 @@ export default {
       return answers;
     }   
   }, 
+
+  methods: {
+    submitAnswer() {
+      if (!this.chosenAnswer) {
+        alert("Pick one the options")
+      } else {
+        if (this.chosenAnswer == this.correctAnswers) {
+          alert("Correct!")
+        } else {
+          alert("ERROR!")
+        }
+      }
+    }
+  },
 
   //Lifehooks cicle
   created() {
@@ -72,6 +96,11 @@ export default {
       &:hover {
         background-color: #145cad;
       }
+    }
+
+    .general-box {
+      display: flex;
+      padding: 15px;
     }
   }
 </style>
