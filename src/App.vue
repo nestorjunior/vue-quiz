@@ -1,7 +1,9 @@
 <template>
+  
   <section class="score">
-    
+    <ScoreBoard :winCount='this.winCount' :loseCount='this.loseCount' />
   </section>
+
   <template v-if="this.question">
     <section class="details">
       <h2 v-html="this.question"></h2>
@@ -35,8 +37,13 @@
 </template>
 
 <script>
+import ScoreBoard from '@/components/ScoreBoard.vue';
+
 export default {
   name: 'App',
+  components: {
+    ScoreBoard
+  },
 
   //Function
   data() {
@@ -46,6 +53,8 @@ export default {
       correctAnswers: undefined,
       chosenAnswer: undefined,
       answerSubmitted: false,
+      winCount: 0,
+      loseCount: 0,
     }
   },
 
@@ -64,9 +73,9 @@ export default {
       } else {
         this.answerSubmitted = true;
         if (this.chosenAnswer == this.correctAnswers) {
-          console.log("Correct!")
+          this.winCount++;
         } else {
-          console.log("ERROR!")
+          this.loseCount++;
         }
       }
     },
