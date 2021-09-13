@@ -29,7 +29,7 @@
         &#10060; I'm sorry, you picked the wrong answer: {{ this.chosenAnswer }}.
       </h4>
 
-      <button class="send">Next Question</button>
+      <button @click="this.getNewQuestion()" class="send">Next Question</button>
     </section>
   </template>
 </template>
@@ -69,18 +69,28 @@ export default {
           console.log("ERROR!")
         }
       }
+    },
+
+    getNewQuestion() {
+      //Resetando os campos
+      this.answerSubmitted = false;
+      this.chosenAnswer = undefined;
+      this.question = undefined;
+
+      this.axios
+      .get('https://opentdb.com/api.php?amount=10&category=10')
+      .then((response) => {
+        this.question = response.data.results[0].question;
+        this.incorrectAnswers = response.data.results[0].incorrect_answers;
+        this.correctAnswers = response.data.results[0].correct_answer;
+      })  
     }
+
   },
 
   //Lifehooks cicle
   created() {
-    this.axios
-    .get('https://opentdb.com/api.php?amount=10&category=10')
-    .then((response) => {
-      this.question = response.data.results[0].question;
-      this.incorrectAnswers = response.data.results[0].incorrect_answers;
-      this.correctAnswers = response.data.results[0].correct_answer;
-    })
+    this.getNewQuestion();
   },
 }
 
@@ -115,5 +125,12 @@ export default {
       display: flex;
       padding: 15px;
     }
+
+    .details {
+      display: inline-block;
+      width: 650px;
+      text-align: left;
+    }
+
   }
 </style>
